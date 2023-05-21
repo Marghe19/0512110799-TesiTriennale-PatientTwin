@@ -1,0 +1,12 @@
+numpy
+scipy
+dgl
+scikit-learn
+pandas
+seaborn
+torch
+flask
+flask-cors
+flask_sqlalchemy
+mysql-connector-python
+mysql-connector-python-rf

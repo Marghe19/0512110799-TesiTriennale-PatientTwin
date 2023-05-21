@@ -47,9 +47,9 @@ class TcpClassifier(BaseEstimator, ClassifierMixin):
     >>> import numpy as np
     >>> from sklearn.datasets import load_iris
     >>> from sklearn.svm import SVC
-    >>> from digital_patient.conformal.base import ClassifierAdapter
-    >>> from digital_patient.conformal.cp import TcpClassifier
-    >>> from digital_patient.conformal.nc import ClassifierNc, MarginErrFunc
+    >>> from backend.digital_patient import ClassifierAdapter
+    >>> from backend.digital_patient import TcpClassifier
+    >>> from backend.digital_patient import ClassifierNc, MarginErrFunc
     >>> iris = load_iris()
     >>> idx = np.random.permutation(iris.target.size)
     >>> train = idx[:int(idx.size / 2)]

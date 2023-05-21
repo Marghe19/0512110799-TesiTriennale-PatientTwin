@@ -5,10 +5,12 @@ from pathlib import Path
 import signal
 from subprocess import Popen, PIPE
 from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__, template_folder='template')
 CORS(app)
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Musica.23@localhost/pt_mysql'
 @app.route('/')
 def index():
     dir = str(Path('__http/template/index.html').parent.absolute())

@@ -24,7 +24,7 @@ def main():
     df3A = (pd.read_csv(f3, index_col=0) * scalerA.scale_[-4]) + scalerA.mean_[-4]
     df4A = (pd.read_csv(f4, index_col=0) * scalerA.scale_[-3]) + scalerA.mean_[-3]
 
-    result_dir = './results/patient-old5/'
+    result_dir = 'results/patient-old5/'
     scalerB = joblib.load(f'{result_dir}scaler.joblib')
     file_list = glob.glob(f'{result_dir}**.csv')
     f1, f2, f3, f4 = file_list[5], file_list[9], file_list[12], file_list[13]
