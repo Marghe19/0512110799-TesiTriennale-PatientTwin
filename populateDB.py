@@ -3,7 +3,7 @@ import mysql.connector.plugins
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
-    passwd="Musica.23",
+    passwd="",
     auth_plugin="caching_sha2_password",
     database="pt_db"
 )
