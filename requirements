@@ -10,3 +10,4 @@ flask-cors
 flask_sqlalchemy
 mysql-connector-python
 mysql-connector-python-rf
+npm
