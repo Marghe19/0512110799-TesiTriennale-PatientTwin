@@ -18,25 +18,26 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Musica.23@localhost/pt_mysql'
+
 
 @app.route('/')
 def index():
     dir = str(Path('__http/template/index.html').parent.absolute())
     return render_template('index.html')
 
+
 @app.route('/ras')
 def ras():
     dir = str(Path('__http/template/ras.html').parent.absolute())
     return render_template('ras.html')
 
+
 @app.route('/patient')
 def patient():
     dir = str(Path('__http/template/patient.html').parent.absolute())
     return render_template('patient.html')
+
 
 @app.route('/run/<command>')
 def run(command):
@@ -45,6 +46,7 @@ def run(command):
     print(path)
     out = os.popen('python3.10 ' + path).read()
     return render_template('index.html')
+
 
 @app.route("/register", methods=["POST"])
 def register_user():
@@ -68,7 +70,8 @@ def register_user():
         "email": new_user.email
     })
 
-@app.route("/login", methods = ["POST"])
+
+@app.route("/login", methods=["POST"])
 def login_user():
     email = request.json["email"]
     password = request.json["password"]
@@ -88,6 +91,7 @@ def login_user():
         "email": user.email
     })
 
+
 @app.route("/@me")
 def get_current_user():
     user_id = session.get("user_id")
@@ -100,3 +104,12 @@ def get_current_user():
         "id": user.id,
         "email": user.email
     })
+
+
+if __name__ == "__main__":
+    app.run(
+        port=8000,
+        debug=True,
+        host='localhost',
+        threaded=True
+    )
