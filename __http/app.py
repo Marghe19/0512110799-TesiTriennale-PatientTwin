@@ -6,20 +6,19 @@ from pathlib import Path
 from models import db, User
 from config import ApplicationConfig
 from flask_session import Session
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__, template_folder='template')
 
 app.config.from_object(ApplicationConfig)
 
 bcrypt = Bcrypt(app)
+CORS(app, supports_credentials=True)
 server_session = Session(app)
 db.init_app(app)
 
 with app.app_context():
     db.create_all()
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Musica.23@localhost/pt_mysql'
-
 
 @app.route('/')
 def index():
@@ -69,7 +68,6 @@ def register_user():
         "id": new_user.id,
         "email": new_user.email
     })
-
 
 @app.route("/login", methods=["POST"])
 def login_user():
