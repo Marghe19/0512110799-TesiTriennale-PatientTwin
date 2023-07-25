@@ -38,6 +38,7 @@ const LoginScreen = ({navigation}) => {
                     title="Login"
                     onPress={() => {
                         login(email, password);
+                        navigation.navigate('Home')
                     }}
                 />
 
