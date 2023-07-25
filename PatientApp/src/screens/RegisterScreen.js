@@ -21,12 +21,7 @@ const RegisterScreen = ({navigation}) => {
         <View style={styles.container}>
             <Spinner visible={isLoading} />
             <View style={styles.wrapper}>
-                <TextInput
-                    style={styles.input}
-                    value={name}
-                    placeholder="Enter name"
-                    onChangeText={text => setName(text)}
-                />
+
 
                 <TextInput
                     style={styles.input}

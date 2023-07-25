@@ -10,12 +10,11 @@ export const AuthProvider = ({children}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [splashLoading, setSplashLoading] = useState(false);
 
-    const register = (name, email, password) => {
+    const register = (email, password) => {
         setIsLoading(true);
 
         axios
-            .post(`${BASE_URL}/register`, {
-                name,
+            .post(`http://localhost:8000/register`, {
                 email,
                 password,
             })
@@ -36,7 +35,7 @@ export const AuthProvider = ({children}) => {
         setIsLoading(true);
 
         axios
-            .post(`${BASE_URL}/login`, {
+            .post(`http://localhost:8000//login`, {
                 email,
                 password,
             })
