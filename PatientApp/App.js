@@ -1,26 +1,15 @@
-import React, { } from 'react';
-import './App.css';
+import React from 'react';
+import {StatusBar, Text, View} from 'react-native';
+import Navigation from './src/components/Navigation';
+import {AuthProvider} from './src/context/AuthContext';
 
-import {BrowserRouter, Routes, Route, Link} from 'react-router-dom';
-
-import Welcome from "./screens/Welcome";
-import LoginScreen from "./screens/LoginScreen"
-
-function App() {
+const App = () => {
     return (
-        <div className="vh-100 gradient-custom">
-            <div className="container">
-                <h1 className="page-header text-center">Patient Twin</h1>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="/" element={<Welcome />} />
-                        <Route path="/login" element={<LoginScreen />} />
-                    </Routes>
-                </BrowserRouter>
-
-            </div>
-        </div>
+        <AuthProvider>
+            <StatusBar backgroundColor="#06bcee" />
+            <Navigation />
+        </AuthProvider>
     );
-}
+};
 
 export default App;
