@@ -1,3 +1,4 @@
+import json
 import os
 
 import dgl
@@ -7,9 +8,17 @@ import seaborn as sns
 import networkx as nx
 import numpy as np
 import joblib
+import boto3
+import s3_routine
 
 import digital_patient
+
+from digital_patient.conformal.base import RegressorAdapter
+from digital_patient.conformal.icp import IcpRegressor
+from digital_patient.conformal.nc import RegressorNc
+from load_data import load_physiology
 from our_load_data import our_load_physiology
+from plot_graph import plot_graph
 
 
 def main():
@@ -26,7 +35,7 @@ def main():
 
     # instantiate a digital patient model
     G = dgl.graph(edge_list)
-    dp = digital_patient.DigitalPatient(G, epochs=20, lr=0.01, window_size=window_size - 2)
+    dp = digital_patient.DigitalPatient(G, epochs=1, lr=0.01, window_size=window_size-2)
 
     # plot the graph corresponding to the digital patient
     nx_G = dp.G.to_networkx()
@@ -53,6 +62,10 @@ def main():
 
     # plot the results
     sns.set_style('whitegrid')
+    # Lista per contenere i link delle immagini PNG generate
+    image_links = []
+
+    # ciclo for per le immagini PNG generate
     for i, name in enumerate(list(addendum["RAS"][1]) + list(addendum["CARDIO"][1])):
         for j in range(predictions.shape[0]):
             xi = y_test[j, :, i]
@@ -63,11 +76,11 @@ def main():
 
             if name in addendum["RAS"][1]:
                 ti = addendum["RAS"][0][j]
-                ylabel = 'concentration [ng/mL]'
+                ylabel= 'concentration [ng/mL]'
                 xlabel = 't [days]'
             else:
                 ti = addendum["CARDIO"][0][j]
-                ylabel = 'pressure [mmHg]'
+                ylabel= 'pressure [mmHg]'
                 xlabel = 't [sec]'
 
             tik = np.repeat(ti, pi.shape[0])
@@ -88,10 +101,9 @@ def main():
             plt.xlabel(xlabel)
             plt.tight_layout()
             plt.savefig(f'{result_dir}{name}_{j}.png')
-            plt.show()
+            #plt.show()
             break
 
-    return
 
 
 if __name__ == '__main__':
