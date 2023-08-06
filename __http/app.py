@@ -3,7 +3,7 @@ import os
 import subprocess
 
 from flask_bcrypt import Bcrypt
-from flask import Flask, render_template, request, jsonify, session, send_file
+from flask import Flask, render_template, request, jsonify, session, send_file, send_from_directory
 from pathlib import Path
 from models import db, User
 from config import ApplicationConfig
@@ -22,11 +22,14 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-
 @app.route('/get_image_link', methods=['GET'])
 def get_image_link():
-    image_link = 'examples/results/patient-old5/ACE2_0.png'
+    image_link = '/examples/results/patient-old5/ACE2_0.png'
     return jsonify({'link': image_link})
+
+@app.route('/examples/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('examples', filename)
 
 @app.route('/')
 def index():

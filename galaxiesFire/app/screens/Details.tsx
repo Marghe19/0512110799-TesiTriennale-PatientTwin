@@ -8,8 +8,10 @@ const Details = () => {
     useEffect(() => {
         const fetchImageLink = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/get_image_link');
-                setImageLink(response.data.link);
+                const serverBaseURL = 'http://localhost:8000';
+                const response = await axios.get(`${serverBaseURL}/get_image_link`);
+                setImageLink(`${serverBaseURL}${response.data.link}`);
+                console.log(response);
             } catch (error) {
                 console.error('Error fetching image link:', error);
             }
