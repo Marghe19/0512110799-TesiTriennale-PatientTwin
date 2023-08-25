@@ -1,8 +1,22 @@
-import {View, Text, StyleSheet, TextInput, ActivityIndicator, Button, KeyboardAvoidingView} from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    ActivityIndicator,
+    Button,
+    KeyboardAvoidingView,
+    Dimensions,
+    Image, Platform
+} from 'react-native';
+import Feather from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import React, {useState} from 'react';
 import {FIREBASE_AUTH} from "../../FirebaseConfig";
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {createUserWithEmailAndPassword} from "firebase/auth";
+import styled from "styled-components";
+import {StatusBar} from "expo-status-bar";
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -38,17 +52,31 @@ const Login = () => {
 
     return(
         <View style={styles.container}>
-            <KeyboardAvoidingView behavior='padding'>
-                <TextInput value={email} style={styles.input} placeholder="Email" autoCapitalize="none" onChangeText={(text) => setEmail(text)}></TextInput>
-                <TextInput secureTextEntry={true} value={password} style={styles.input} placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}></TextInput>
-                {loading ? <ActivityIndicator size="large" color="#0000ff"/>
-                :(
-                    <>
-                        <Button title="Login" onPress={signIn}/>
-                        <Button title="Create account" onPress={signUp}/>
-                    </>
-                    )}
-            </KeyboardAvoidingView>
+            <View style = {styles.header}>
+                <Text style={styles.text_header}>Benvenuto!</Text>
+            </View>
+            <View style = {styles.footer}>
+                <Text style={styles.text_footer}>Email</Text>
+                <View style={styles.action}>
+                    <FontAwesome
+                    name = "user-o"
+                    color="#05375a"
+                    size={20}/>
+                    <TextInput value={email} placeholder="Your Email"style={styles.textInput} autoCapitalize="none" onChangeText={(text) => setEmail(text)}></TextInput>
+
+                </View>
+                <Text style ={[styles.text_footer,{marginTop:35}]}>Password</Text>
+                <View style={styles.action}>
+                    <FontAwesome
+                        name = "lock"
+                        color="#05375a"
+                        size={20}/>
+                    <TextInput secureTextEntry={true} value={password} style={styles.textInput} placeholder="Your Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}></TextInput>
+
+                </View>
+
+                <Button color={'#009387'} title="Login" onPress={signIn}/>
+            </View>
 
         </View>
     );
@@ -57,17 +85,45 @@ const Login = () => {
 export default Login;
 
 const styles = StyleSheet.create({
-    container:{
-        marginHorizontal: 20,
+    container: {
         flex: 1,
-        justifyContent: 'center'
+        backgroundColor: '#009387'
     },
-    input:{
-        marginVertical: 4,
-        height:50,
-        borderWidth: 1,
-        borderRadius: 4,
-        padding: 10,
-        backgroundColor: '#fff'
+    header: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        paddingHorizontal: 20,
+        paddingBottom: 50
+    },
+    footer: {
+        flex: 3,
+        backgroundColor: '#fff',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        paddingHorizontal: 20,
+        paddingVertical: 30
+    },
+    text_header: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 30
+    },
+    text_footer: {
+        color: '#05375a',
+        fontWeight: 'bold',
+        fontSize: 18
+    },
+    action: {
+        flexDirection: 'row',
+        marginTop: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f2f2f2',
+        paddingBottom: 5
+    },
+    textInput: {
+        flex: 1,
+        marginTop: Platform.OS === 'ios' ? 0 : -12,
+        paddingLeft: 10,
+        color: '#05375a'
     }
 });
