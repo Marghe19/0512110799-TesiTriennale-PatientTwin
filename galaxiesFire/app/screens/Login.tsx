@@ -3,20 +3,16 @@ import {
     Text,
     StyleSheet,
     TextInput,
-    ActivityIndicator,
     Button,
-    KeyboardAvoidingView,
-    Dimensions,
-    Image, Platform
+    Platform
 } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
+
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import React, {useState} from 'react';
 import {FIREBASE_AUTH} from "../../FirebaseConfig";
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {createUserWithEmailAndPassword} from "firebase/auth";
-import styled from "styled-components";
-import {StatusBar} from "expo-status-bar";
+
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
