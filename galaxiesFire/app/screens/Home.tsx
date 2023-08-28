@@ -27,10 +27,8 @@ const Home = ({navigation}:RouterProps) => {
             </View>
             <View style = {styles.footer}>
                 <View style = {{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style ={[styles.text_footer,{marginTop:35}]}>Visualizza grafici generati dal Patient Twin </Text>
-                    <Button color={'#009387'} onPress={() => navigation.navigate('Details')} title="Patient"/>
                     <Text style ={[styles.text_footer,{marginTop:35}]}>Avvia il Patient Twin </Text>
-                    <Button color={'#009387'} title="Run Python Code" onPress={startScript} />
+                    <Button color={'#009387'} title="Start" onPress={startScript} />
                     <Text style ={[{marginTop:35}]}> </Text>
                     <Text>{output}</Text>
                     <Button color={'#009387'} onPress={() => FIREBASE_AUTH.signOut()} title="Logout"/>
@@ -49,10 +47,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#009387'
     },
     header: {
-        flex: 1,
+        flex: 0.5,
         justifyContent: 'flex-end',
         paddingHorizontal: 20,
-        paddingBottom: 50
+        paddingBottom: 25
     },
     footer: {
         flex: 3,

@@ -17,8 +17,7 @@ const InsideStack = createNativeStackNavigator();
 function InsideLayout(){
     return(
         <InsideStack.Navigator>
-            <InsideStack.Screen name="Home" component={Home}/>
-            <InsideStack.Screen name="Details" component={Details}/>
+            <InsideStack.Screen name="Home" options={{ headerShown: false }} component={Home}/>
         </InsideStack.Navigator>
     )
 }
