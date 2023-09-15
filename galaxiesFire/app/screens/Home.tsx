@@ -20,6 +20,24 @@ const Home = ({navigation}:RouterProps) => {
             console.error('Errore durante la chiamata API:', error);
         }
     };
+
+    const cardio = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/cardio');
+            console.log(response);
+        } catch (error) {
+            console.error('Errore durante la chiamata API:', error);
+        }
+    };
+
+    const dkd = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/dkd');
+            console.log(response);
+        } catch (error) {
+            console.error('Errore durante la chiamata API:', error);
+        }
+    };
     return(
         <View style={styles.container}>
             <View style = {styles.header}>
@@ -29,6 +47,14 @@ const Home = ({navigation}:RouterProps) => {
                 <View style = {{flex:1, justifyContent: 'center', alignItems: 'center'}}>
                     <Text style ={[styles.text_footer,{marginTop:35}]}>Avvia il Patient Twin </Text>
                     <Button color={'#009387'} title="Start" onPress={startScript} />
+                    <Text style ={[{marginTop:35}]}> </Text>
+                    <Text>{output}</Text>
+                    <Text style ={[styles.text_footer,{marginTop:35}]}>CARDIO </Text>
+                    <Button color={'#009387'} title="Start" onPress={cardio} />
+                    <Text style ={[{marginTop:35}]}> </Text>
+                    <Text>{output}</Text>
+                    <Text style ={[styles.text_footer,{marginTop:35}]}>DKD </Text>
+                    <Button color={'#009387'} title="Start" onPress={dkd} />
                     <Text style ={[{marginTop:35}]}> </Text>
                     <Text>{output}</Text>
                     <Button color={'#009387'} onPress={() => FIREBASE_AUTH.signOut()} title="Logout"/>

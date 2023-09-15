@@ -1,4 +1,3 @@
-import json
 import os
 
 import dgl
@@ -8,18 +7,8 @@ import seaborn as sns
 import networkx as nx
 import numpy as np
 import joblib
-import boto3
-import s3_routine
-
 import digital_patient
-
-from digital_patient.conformal.base import RegressorAdapter
-from digital_patient.conformal.icp import IcpRegressor
-from digital_patient.conformal.nc import RegressorNc
-from load_data import load_physiology
 from our_load_data import our_load_physiology
-from plot_graph import plot_graph
-
 
 def main():
     # create directory to save results
@@ -35,7 +24,7 @@ def main():
 
     # instantiate a digital patient model
     G = dgl.graph(edge_list)
-    dp = digital_patient.DigitalPatient(G, epochs=1, lr=0.01, window_size=window_size-2)
+    dp = digital_patient.DigitalPatient(G, epochs=1, lr=0.01, window_size=window_size - 2)
 
     # plot the graph corresponding to the digital patient
     nx_G = dp.G.to_networkx()
@@ -101,7 +90,13 @@ def main():
             plt.xlabel(xlabel)
             plt.tight_layout()
             plt.savefig(f'{result_dir}{name}_{j}.png')
-            #plt.show()
+            plt.show()
+            #image_path = f'{result_dir}{name}_{j}.png'
+            #plt.savefig(image_path)
+            #plt.close()
+
+            # Print the image path
+            #print(image_path)
             break
 
 

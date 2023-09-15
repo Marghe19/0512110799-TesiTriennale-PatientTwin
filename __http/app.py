@@ -75,6 +75,22 @@ def start_script():
     except subprocess.CalledProcessError as e:
         return str(e.output)
 
+@app.route('/api/cardio', methods=['GET'])
+def cardio():
+    try:
+        result = subprocess.check_output(['python3', 'examples/randomcsvcardio.py'], stderr=subprocess.STDOUT)
+        return result
+    except subprocess.CalledProcessError as e:
+        return str(e.output)
+
+@app.route('/api/dkd', methods=['GET'])
+def dkd():
+    try:
+        result = subprocess.check_output(['python3', 'examples/rnadomcsv.py'], stderr=subprocess.STDOUT)
+        return result
+    except subprocess.CalledProcessError as e:
+        return str(e.output)
+
 
 
 if __name__ == "__main__":
