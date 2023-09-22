@@ -1,4 +1,7 @@
 import os
+from datetime import datetime
+from lib2to3.pytree import Base
+
 
 import dgl
 import pandas as pd
@@ -7,24 +10,52 @@ import seaborn as sns
 import networkx as nx
 import numpy as np
 import joblib
+from sqlalchemy import Column, Integer, create_engine, DateTime
+from sqlalchemy.orm import declarative_base, sessionmaker
+
 import digital_patient
 from our_load_data import our_load_physiology
 
+Base = declarative_base()
+
+class Esecuzione(Base):
+    __tablename__ = 'esecuzioni'
+
+    id = Column(Integer, primary_key=True)
+    numero = Column(Integer)
+    timestamp = Column(DateTime, default=datetime.now)
 def main():
+
+    # Crea una cartella con un timestamp come nome
+    timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    result_dir = f'results/patient-old5/{timestamp}/'
+    os.makedirs(result_dir)
     # create directory to save results
-    result_dir = 'results/patient-old5/'
-    if not os.path.isdir(result_dir):
-        os.makedirs(result_dir)
+    #result_dir = 'results/patient-old5/'
+    #if not os.path.isdir(result_dir):
+     #   os.makedirs(result_dir)
 
     # load data
     window_size = 500
     x_train, y_train, x_test, y_test, edge_list, addendum, scaler = our_load_physiology(window_size)
     joblib.dump(scaler, f'{result_dir}scaler.joblib')
     # scaler2 = joblib.load(f'{result_dir}scaler.joblib')
+    engine = create_engine('sqlite:///mydatabase.db')
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    # Ottieni il numero dell'esecuzione corrente
+    numero_esecuzione = session.query(Esecuzione).count() + 1
+
+    # Registra l'esecuzione nel database con il numero e il timestamp
+    nuova_esecuzione = Esecuzione(numero=numero_esecuzione)
+    session.add(nuova_esecuzione)
+    session.commit()
 
     # instantiate a digital patient model
     G = dgl.graph(edge_list)
-    dp = digital_patient.DigitalPatient(G, epochs=1, lr=0.01, window_size=window_size - 2)
+    dp = digital_patient.DigitalPatient(G, epochs=20, lr=0.01, window_size=window_size - 2)
 
     # plot the graph corresponding to the digital patient
     nx_G = dp.G.to_networkx()
@@ -89,8 +120,11 @@ def main():
             plt.ylabel(ylabel)
             plt.xlabel(xlabel)
             plt.tight_layout()
-            plt.savefig(f'{result_dir}{name}_{j}.png')
+            session.close()
+            plt.savefig(os.path.join(result_dir, f'{name}_{j}.png'))
+            #plt.savefig(f'{result_dir}{name}_{j}.png')
             plt.show()
+
             #image_path = f'{result_dir}{name}_{j}.png'
             #plt.savefig(image_path)
             #plt.close()
