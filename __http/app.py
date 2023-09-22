@@ -24,6 +24,56 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+@app.route('/api/images', methods=['POST'])
+def get_image_names():
+    # Ottieni il timestamp dalla richiesta POST
+    data = request.get_json()
+    timestamp = data.get('timestamp', None)
+
+    if timestamp is not None:
+        # Costruisci il percorso completo della cartella basato sul timestamp
+        folder_path = os.path.join('patient-old', timestamp)
+
+        # Verifica se la cartella esiste
+        if os.path.exists(folder_path) and os.path.isdir(folder_path):
+            # Ottieni i nomi delle immagini nella cartella
+            image_names = [filename for filename in os.listdir(folder_path) if filename.lower().endswith('.png')]
+            return jsonify(image_names)
+
+    # Se il timestamp non è valido o la cartella non esiste, restituisci un elenco vuoto
+    return jsonify([])
+# ...
+
+@app.route('/api/get_image')
+def get_image():
+    image_path = 'examples/results/patient-old5/2023-09-16_19-08-07/ACE2_0.png'  # Sostituisci con il percorso corretto dell'immagine PNG
+    return send_file(image_path, mimetype='image/png')
+
+@app.route('/api/folders', methods=['GET'])
+def get_folders():
+    # Sostituisci 'path/to/your/folder' con il percorso reale in cui vengono generate le cartelle
+    folder_path = 'examples/results/patient-old5'
+
+    # Ottieni l'elenco delle cartelle con timestamp
+    folders_with_timestamp = []
+
+    for folder in os.listdir(folder_path):
+        if os.path.isdir(os.path.join(folder_path, folder)):
+            folder_info = {"timestamp": folder, "images": []}
+
+            # Trova i nomi dei file di immagine nella cartella
+            for file_name in os.listdir(os.path.join(folder_path, folder)):
+                if file_name.lower().endswith(('.png', '.jpg', '.jpeg')):
+                    folder_info["images"].append(file_name)
+
+            folders_with_timestamp.append(folder_info)
+
+    return jsonify(folders_with_timestamp)
+
+
+
+
+
 @app.route('/run-python-script', methods=['GET'])
 def run_python_script():
     try:
@@ -31,12 +81,6 @@ def run_python_script():
         return result
     except subprocess.CalledProcessError as e:
         return str(e.output)
-
-@app.route('/get_image_link', methods=['GET'])
-def get_image_link():
-    image_link = '/examples/results/patient-old5/angI_0.png'
-    return jsonify(image_link)
-
 
 @app.route('/examples/<path:filename>')
 def serve_static(filename):
