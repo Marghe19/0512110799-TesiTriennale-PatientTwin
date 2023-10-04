@@ -1,9 +1,9 @@
-import {View, Text, Button, StyleSheet, TouchableOpacity, FlatList, ScrollView} from 'react-native';
+import {View, Text, Button, StyleSheet, TouchableOpacity, FlatList, ScrollView, Image} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {NavigationProp} from "@react-navigation/native";
 import {FIREBASE_AUTH} from "../../FirebaseConfig";
 import axios from "axios";
-
+import {render} from "react-dom";
 
 interface RouterProps{
     navigation: NavigationProp<any, any>;
@@ -11,48 +11,45 @@ interface RouterProps{
 
 const Home = ({navigation}:RouterProps) => {
     const [output, setOutput] = useState('');
-    const [folders, setFolders] = useState([]);
     const [selectedImages, setSelectedImages] = useState([]);
-    const [selectedTimestamp, setSelectedTimestamp] = useState(null);
+    const [imageLinks, setImageLinks] = useState([]);
 
-
-    const handleFolderPress = async (folder) => {
-        try {
-            // Invia una richiesta POST al server con il timestamp della cartella selezionata
-            const response = await axios.post('http://localhost:8000/api/images', { timestamp: folder.timestamp });
-
-            // Ottieni i nomi delle immagini dalla risposta del server
-            const imageNames = response.data;
-
-            // Imposta l'elenco delle immagini selezionate e il timestamp corrente
-            setSelectedImages(imageNames);
-            setSelectedTimestamp(folder.timestamp);
-        } catch (error) {
-            console.error('Errore nella richiesta:', error);
-        }
-    };
-
-
-    useEffect(() => {
-        // Funzione per ottenere l'elenco delle cartelle dal server
-        const fetchFolders = async () => {
+    /*useEffect(() => {
+        const fetchImageLink = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/folders');
-                setFolders(response.data);
+                const serverBaseURL = 'http://localhost:8000';
+                const response = await axios.get(`${serverBaseURL}/get_image_link`);
+                setImageLinks(`${serverBaseURL}${response.data.links}`);
+                console.log(`${serverBaseURL}${response.data.links}`);
+                console.log(response);
             } catch (error) {
-                console.error('Errore durante la richiesta delle cartelle:', error);
+                console.error('Error fetching image link:', error);
             }
         };
+        fetchImageLink();
+    }, []);*/
 
-        // Chiama la funzione per ottenere l'elenco delle cartelle all'avvio dell'app
-        fetchFolders();
 
-        // Aggiorna l'elenco delle cartelle ogni tot millisecondi (ad esempio, ogni 10 secondi)
-        const intervalId = setInterval(fetchFolders, 10000); // Intervallo di 10 secondi
 
-        // Pulisce l'intervallo quando il componente viene smontato
-        return () => clearInterval(intervalId);
-    }, []);
+
+    /*useEffect(() => {
+        // Effettua una richiesta POST all'API Flask per ottenere gli array di percorsi delle immagini
+        fetch('http://localhost:8000/api/images', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ timestamp: 'selectedTimestamp' }), // Sostituisci con il timestamp desiderato
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setImagePaths(data);
+            })
+            .catch((error) => console.error(error));
+    }, []);*/
+
+
+
 
     const startScript = async () => {
         try {
@@ -79,13 +76,22 @@ const Home = ({navigation}:RouterProps) => {
         } catch (error) {
             console.error('Errore durante la chiamata API:', error);
         }
-    };
+    }
+
+
     return(
         <View style={styles.container}>
+
             <View style = {styles.header}>
                 <Text style={styles.text_header}>Patient Twin</Text>
             </View>
+
             <View style = {styles.footer}>
+                <View>
+                        <Button color={'#009387'} title="Nuova pagina" onPress={() => navigation.navigate('Database')}/>
+
+                </View>
+
                 <View style = {{flex:1, justifyContent: 'center', alignItems: 'center'}}>
                     <Text style ={[styles.text_footer,{marginTop:35}]}>Avvia il Patient Twin </Text>
                     <Button color={'#009387'} title="Start" onPress={startScript} />
@@ -104,29 +110,7 @@ const Home = ({navigation}:RouterProps) => {
                 </View>
 
             </View>
-            <ScrollView>
-                <Text>Elenco delle Cartelle:</Text>
-                {folders.map((folder, index) => (
-                    <View key={index}>
-                        <TouchableOpacity onPress={() => handleFolderPress(folder)}>
-                            <Text>{folder.timestamp}</Text>
-                        </TouchableOpacity>
-                    </View>
-                ))}
 
-                {/* Visualizza le immagini selezionate */}
-                {selectedTimestamp && (
-                    <View>
-                        <Text>Immagini nella cartella {selectedTimestamp}:</Text>
-                        {selectedImages.map((imageName, index) => (
-                            <Image
-                                source={{ uri: 'http://localhost:8000/api/get_image' }}
-                                style={{ width: 200, height: 200 }}
-                            />
-                        ))}
-                    </View>
-                )}
-            </ScrollView>
 
         </View>
     );
@@ -139,6 +123,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#009387'
+    },
+    imageNameContainer: {
+        borderBottomWidth: 1,
+        borderColor: '#ccc',
+        paddingVertical: 8,
+    },
+    imageName: {
+        fontSize: 16,
     },
     header: {
         flex: 0.5,
@@ -163,5 +155,13 @@ const styles = StyleSheet.create({
         color: '#05375a',
         fontWeight: 'bold',
         fontSize: 15
+    },
+    image: {
+        width: 200,
+        height: 200,
+        resizeMode: 'contain',
+    },
+    imageContainer: {
+        marginVertical: 10,
     }
 });
