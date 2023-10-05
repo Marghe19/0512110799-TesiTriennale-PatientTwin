@@ -10,6 +10,7 @@ const Database = () => {
     const [output, setOutput] = useState('');
     const [selectedImages, setSelectedImages] = useState([]);
     const [imageLinks, setImageLinks] = useState([]);
+    const [imagePaths, setImagePaths] = useState([]);
 
     const handleFolderPress = async (folder) => {
         try {
@@ -48,22 +49,20 @@ const Database = () => {
 
         // Pulisce l'intervallo quando il componente viene smontato
         return () => clearInterval(intervalId);
-
-        const [imagePaths, setImagePaths] = useState([]);
-
-        useEffect(() => {
-            // Effettua la richiesta HTTP per ottenere la lista dei percorsi delle immagini
-            axios.get('http://localhost:8000/get_image_link')
-                .then(response => {
-                    setImagePaths(response.data.image_paths);
-                    console.log(imagePaths.length)
-                })
-                .catch(error => {
-                    console.error('Errore nella richiesta HTTP:', error);
-                });
-        }, []);
     }, []);
 
+    useEffect(() => {
+        // Effettua la richiesta HTTP per ottenere la lista dei percorsi delle immagini
+        axios.get('http://localhost:8000/get_image_link')
+            .then(response => {
+                const data = response.data;
+                setImagePaths(data.immagini);
+                console.log(response.data)
+            })
+            .catch(error => {
+                console.error('Errore nella richiesta HTTP:', error);
+            });
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -84,9 +83,7 @@ const Database = () => {
                     </ScrollView>
                 </View>
 
-                <View>
-                    <Text>{imageNames}</Text>
-                </View>
+
             </View>
         </View>
     );

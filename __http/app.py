@@ -26,10 +26,10 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
-
-#image_paths = []
+image_paths = []
 @app.route('/api/images', methods=['POST'])
 def get_image_names():
+
     data = request.get_json()
     timestamp = data.get('timestamp', None)
     #print('Nome cartella', timestamp);
@@ -42,14 +42,14 @@ def get_image_names():
             image_paths = '\n'.join([os.path.join(folder_path, img_name) for img_name in image_names])
 
             #print(image_paths)
-            return (image_paths)
-            #return jsonify(image_names)
-    return jsonify([])
+            #return (image_paths)
+            #return jsonify(image_paths)
+            return image_paths
 
 @app.route('/get_image_link', methods=['GET'])
 def get_image_link():
-    image_paths = ['examples/results/patient-old5/ACE2_0.png', 'examples/results/patient-old5/ang17_0.png']
-    return jsonify({'image_paths': image_paths})
+    immagini = ['examples/results/patient-old5/ACE2_0.png', 'examples/results/patient-old5/AGT_0.png']
+    return jsonify({'immagini': immagini})
 
 
 @app.route('/api/folders', methods=['GET'])
