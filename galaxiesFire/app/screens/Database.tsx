@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, ScrollView, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import axios from "axios";
 
 const Database = () => {
@@ -11,6 +11,7 @@ const Database = () => {
     const [selectedImages, setSelectedImages] = useState([]);
     const [imageLinks, setImageLinks] = useState([]);
     const [imagePaths, setImagePaths] = useState([]);
+    const serverBaseURL = 'http://localhost:8000';
 
     const handleFolderPress = async (folder) => {
         try {
@@ -18,19 +19,26 @@ const Database = () => {
             const response = await axios.post('http://localhost:8000/api/images', { timestamp: folder.timestamp });
 
             // Ottieni i nomi delle immagini dalla risposta del server
-            const imageNames = response.data;
+            //const imageNames = response.data;
+            const immaginiArray = response.data.image_paths
 
-            // Stampa i nomi delle immagini nella console
-            console.log('Nomi delle immagini:', imageNames);
 
             // Imposta l'elenco delle immagini selezionate e il timestamp corrente
-            setImageNames(imageNames);
+            //setImageNames(imageNames);
+            const replaceBackslashes = (path) => {
+                return path.replace(/\\/g, '/');
+            };
+
+            const updatedPaths = immaginiArray.map(replaceBackslashes);
+            console.log('Nomi delle immagini:', updatedPaths);
+            setImagePaths(updatedPaths)
             setSelectedTimestamp(folder.timestamp);
 
         } catch (error) {
             console.error('Errore nella richiesta:', error);
         }
     };
+
     useEffect(() => {
         // Funzione per ottenere l'elenco delle cartelle dal server
         const fetchFolders = async () => {
@@ -51,18 +59,8 @@ const Database = () => {
         return () => clearInterval(intervalId);
     }, []);
 
-    useEffect(() => {
-        // Effettua la richiesta HTTP per ottenere la lista dei percorsi delle immagini
-        axios.get('http://localhost:8000/get_image_link')
-            .then(response => {
-                const data = response.data;
-                setImagePaths(data.immagini);
-                console.log(response.data)
-            })
-            .catch(error => {
-                console.error('Errore nella richiesta HTTP:', error);
-            });
-    }, []);
+
+
 
     return (
         <View style={styles.container}>
@@ -72,7 +70,7 @@ const Database = () => {
             <View style = {styles.footer}>
                 <View >
                     <ScrollView >
-                    <Text style ={[styles.text_footer,{marginTop:35}]}>Elenco delle Cartelle:</Text>
+                        <Text style ={[styles.text_footer,{marginTop:35}]}>Elenco delle Cartelle:</Text>
                         {folders.map((folder, index) => (
                             <View key={index}>
                                 <TouchableOpacity onPress={() => handleFolderPress(folder)}>
@@ -81,6 +79,18 @@ const Database = () => {
                             </View>
                         ))}
                     </ScrollView>
+                </View>
+
+                <View >
+                    {imagePaths.map((imagePath, index) => (
+                        <View key={index}>
+                            <Text>{imagePath}</Text>
+                            <Image
+                                source={{ uri: `${serverBaseURL}${imagePath}` }}
+                                style={styles.image}
+                            />
+                        </View>
+                    ))}
                 </View>
 
 
@@ -132,7 +142,6 @@ const styles = StyleSheet.create({
     image: {
         width: 200,
         height: 200,
-        resizeMode: 'contain',
     },
     imageContainer: {
         marginVertical: 10,

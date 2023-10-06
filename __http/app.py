@@ -39,16 +39,17 @@ def get_image_names():
         if os.path.isdir(folder_path):
             image_names = [filename for filename in os.listdir(folder_path) if filename.lower().endswith('.png')]
             #image_paths = '\n'.join([os.path.join(folder_path, img_name) for img_name in image_names])
-            image_paths = '\n'.join([os.path.join(folder_path, img_name) for img_name in image_names])
+            image_paths = [os.path.join('/', folder_path, img_name) for img_name in image_names]
 
             #print(image_paths)
             #return (image_paths)
             #return jsonify(image_paths)
-            return image_paths
+            #return image_paths
+            return jsonify({'image_paths': image_paths})
 
 @app.route('/get_image_link', methods=['GET'])
 def get_image_link():
-    immagini = ['examples/results/patient-old5/ACE2_0.png', 'examples/results/patient-old5/AGT_0.png']
+    immagini = ['/examples/results/patient-old5/ACE2_0.png', '/examples/results/patient-old5/AGT_0.png']
     return jsonify({'immagini': immagini})
 
 
