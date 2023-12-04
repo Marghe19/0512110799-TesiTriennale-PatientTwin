@@ -47,15 +47,8 @@ def get_image_names():
             #return image_paths
             return jsonify({'image_paths': image_paths})
 
-@app.route('/get_image_link', methods=['GET'])
-def get_image_link():
-    immagini = ['/examples/results/patient-old5/ACE2_0.png', '/examples/results/patient-old5/AGT_0.png']
-    return jsonify({'immagini': immagini})
-
-
 @app.route('/api/folders', methods=['GET'])
 def get_folders():
-    # Sostituisci 'path/to/your/folder' con il percorso reale in cui vengono generate le cartelle
     folder_path = 'examples/results/patient-old5'
 
     # Ottieni l'elenco delle cartelle con timestamp
@@ -74,14 +67,26 @@ def get_folders():
 
     return jsonify(folders_with_timestamp)
 
-
-
-
-
-@app.route('/run-python-script', methods=['GET'])
-def run_python_script():
+@app.route('/api/cardio', methods=['GET'])
+def cardio():
     try:
-        result = subprocess.check_output(['python3', 'examples\patient.py'], stderr=subprocess.STDOUT)
+        result = subprocess.check_output(['python3', 'examples/randomcsvcardio.py'], stderr=subprocess.STDOUT)
+        return result
+    except subprocess.CalledProcessError as e:
+        return str(e.output)
+
+@app.route('/api/dkd', methods=['GET'])
+def dkd():
+    try:
+        result = subprocess.check_output(['python3', 'examples/rnadomcsv.py'], stderr=subprocess.STDOUT)
+        return result
+    except subprocess.CalledProcessError as e:
+        return str(e.output)
+
+@app.route('/api/start_script', methods=['GET'])
+def start_script():
+    try:
+        result = subprocess.check_output(['python3', 'examples/patient.py'], stderr=subprocess.STDOUT)
         return result
     except subprocess.CalledProcessError as e:
         return str(e.output)
@@ -89,8 +94,6 @@ def run_python_script():
 @app.route('/examples/<path:filename>')
 def serve_static(filename):
     return send_from_directory('examples', filename)
-
-
 
 @app.route('/')
 def index():
@@ -117,31 +120,13 @@ def run(command):
     out = os.popen('python3.10 ' + path).read()
     return render_template('index.html')
 
-@app.route('/api/start_script', methods=['GET'])
-def start_script():
+@app.route('/run-python-script', methods=['GET'])
+def run_python_script():
     try:
-        result = subprocess.check_output(['python3', 'examples/patient.py'], stderr=subprocess.STDOUT)
+        result = subprocess.check_output(['python3', 'examples\patient.py'], stderr=subprocess.STDOUT)
         return result
     except subprocess.CalledProcessError as e:
         return str(e.output)
-
-@app.route('/api/cardio', methods=['GET'])
-def cardio():
-    try:
-        result = subprocess.check_output(['python3', 'examples/randomcsvcardio.py'], stderr=subprocess.STDOUT)
-        return result
-    except subprocess.CalledProcessError as e:
-        return str(e.output)
-
-@app.route('/api/dkd', methods=['GET'])
-def dkd():
-    try:
-        result = subprocess.check_output(['python3', 'examples/rnadomcsv.py'], stderr=subprocess.STDOUT)
-        return result
-    except subprocess.CalledProcessError as e:
-        return str(e.output)
-
-
 
 if __name__ == "__main__":
     app.run(

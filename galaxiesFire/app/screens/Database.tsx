@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, ScrollView, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, ImageBackground} from 'react-native';
 import axios from "axios";
 
 const Database = () => {
@@ -63,46 +63,49 @@ const Database = () => {
 
 
     return (
-        <View style={styles.container}>
-            <View style = {styles.header}>
-                <Text style={styles.text_header}>Patient Twin</Text>
-            </View>
-            <View style = {styles.footer}>
-                <View >
-                    <ScrollView >
-                        <Text style ={[styles.text_footer,{marginTop:35}]}>Elenco delle Cartelle:</Text>
-                        {folders.map((folder, index) => (
-                            <View key={index}>
-                                <TouchableOpacity onPress={() => handleFolderPress(folder)}>
-                                    <Text style ={[styles.text_footer,{marginTop:35}, ]}>{folder.timestamp}</Text>
-                                </TouchableOpacity>
-                            </View>
-                        ))}
-                    </ScrollView>
-                </View>
+        <ImageBackground source={require('../../assets/sfondodatabase.png')} resizeMode='cover' style={styles.container}>
 
-                <View >
-                    {imagePaths.map((imagePath, index) => (
+        <Text style ={[styles.text_titolo]}>Storage:</Text>
+            <View style={[styles.lista]}>
+                <ScrollView >
+
+                    {folders.map((folder, index) => (
                         <View key={index}>
-                            <Text>{imagePath}</Text>
-                            <Image
-                                source={{ uri: `${serverBaseURL}${imagePath}` }}
-                                style={styles.image}
-                            />
+                            <TouchableOpacity onPress={() => handleFolderPress(folder)}>
+                                <Text style ={[styles.text_footer,{marginTop:10}, ]}>{folder.timestamp}</Text>
+                            </TouchableOpacity>
                         </View>
                     ))}
-                </View>
-
-
+                </ScrollView>
             </View>
-        </View>
+
+            <View >
+                {imagePaths.map((imagePath, index) => (
+                    <View style={styles.imageContainer}key={index}>
+
+                        <Image
+                            source={{ uri: `${serverBaseURL}${imagePath}` }}
+                            style={styles.image}
+                        />
+                    </View>
+                ))}
+            </View>
+
+        </ImageBackground>
     );
 }
 
 const styles = StyleSheet.create({
+    lista:{
+        justifyContent: 'center',
+        marginLeft: 100,
+
+    },
     container: {
         flex: 1,
-        backgroundColor: '#009387'
+        width: 640,
+        height: 1000,
+
     },
     imageNameContainer: {
         borderBottomWidth: 1,
@@ -113,7 +116,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         width: 200, // Larghezza desiderata
         height: 200, // Altezza desiderata
-        backgroundColor: '#009387', // Colore di sfondo
+        backgroundColor: '#fbfcfb', // Colore di sfondo
     },
     header: {
         flex: 0.5,
@@ -129,22 +132,31 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 30
     },
-    text_header: {
-        color: '#fff',
+    text_titolo: {
+        marginLeft: 125,
+        color: '#4faacc',
         fontWeight: 'bold',
-        fontSize: 30
+        fontSize: 35,
+        fontFamily: 'lucida grande',
+        marginTop: 20
     },
     text_footer: {
-        color: '#05375a',
-        fontWeight: 'bold',
-        fontSize: 15
+        color: '#63c4e8',
+
+        fontSize: 20,
+        padding:1,
+        fontFamily: 'lucida grande'
     },
     image: {
-        width: 200,
-        height: 200,
+        width: 400,
+        height: 300,
+        marginTop: 10,
+        marginLeft: 0,
+        padding:20
     },
     imageContainer: {
-        marginVertical: 10,
+        marginVertical: 40,
+        marginTop: 10
     },
 
 });
