@@ -1,4 +1,4 @@
-#Abstract
+# Abstract
 Il Digital Twin (DT) è una rappresentazione virtuale di un’entità ősica, di una persona
 o di un sistema anche complesso, caratterizzata da una comunicazione bidirezionale
 che permette la condivisione dei dati in tempo reale. La diffusione di tale tecnologia,
